@@ -4,7 +4,7 @@ import { findUser } from '../models/userStore';
 export function getOrderCount(userId: string): number {
   const profile = findUser(userId);
   if (!profile) {
-    throw new Error(`Unknown user: ${userId}`);
+    return 0;
   }
-  return profile.orders.length;
+  return profile.orders?.length ?? 0;
 }
