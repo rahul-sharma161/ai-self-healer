@@ -5,11 +5,11 @@ const responses: Record<string, unknown> = {
 };
 
 interface ApiResponse {
-  data: { items: unknown[] };
+  data?: { items?: unknown[] };
 }
 
 /** Returns the number of items in the named upstream API response. */
 export function countItems(key: string): number {
-  const res = responses[key] as ApiResponse;
-  return res.data.items.length;
+  const res = responses[key] as ApiResponse | undefined;
+  return res?.data?.items?.length ?? 0;
 }
