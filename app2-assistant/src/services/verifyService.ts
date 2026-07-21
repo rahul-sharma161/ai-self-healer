@@ -21,7 +21,7 @@ async function runQuiet(command: string, args: string[]): Promise<boolean> {
 }
 
 /** The backend test that exercises a given service, by naming convention. */
-function testFileFor(absPath: string): string {
+export function testFileFor(absPath: string): string {
   const name = path.basename(absPath).replace(/Service\.ts$/, ''); // statsService.ts -> stats
   return path.join(config.repoRoot, 'tests', 'backend', `${name}.test.ts`);
 }
