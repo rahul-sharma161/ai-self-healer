@@ -1,5 +1,6 @@
 import chokidar from 'chokidar';
-import { open, stat } from 'node:fs/promises';
+import { mkdir, open, stat } from 'node:fs/promises';
+import path from 'node:path';
 
 export interface LogEntry {
   timestamp: string;
@@ -58,5 +59,11 @@ export function watchLog(logPath: string, onError: (entry: LogEntry) => void): v
     }
   };
 
-  chokidar.watch(logPath, { ignoreInitial: false }).on('add', readNew).on('change', readNew);
+  // chokidar (v5) does not reliably pick up a watched file that is created AFTER
+  // the watch starts, so ensure it exists first — App2 may start before App1.
+  void (async () => {
+    await mkdir(path.dirname(logPath), { recursive: true });
+    await (await open(logPath, 'a')).close(); // touch (create if missing)
+    chokidar.watch(logPath, { ignoreInitial: false }).on('add', readNew).on('change', readNew);
+  })();
 }
