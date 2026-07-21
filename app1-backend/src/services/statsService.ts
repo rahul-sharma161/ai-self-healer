@@ -6,5 +6,5 @@ export function getOrderCount(userId: string): number {
   if (!profile) {
     throw new Error(`Unknown user: ${userId}`);
   }
-  return profile.orders.length;
+  return profile.orders?.length ?? 0;
 }
